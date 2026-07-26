@@ -1,4 +1,6 @@
 import flet as ft, flet_dropzone as ftd, os
+from mutagen.mp3 import MP3
+from mutagen.id3 import ID3
 
 def main(page: ft.Page):
     page.title = "Tagger"  
@@ -6,13 +8,30 @@ def main(page: ft.Page):
     page.window.height = 500
     page.padding = 15
 
+    metadata = {
+        "TIT2": "Title",
+        "TIT3": "Subtitle",
+        "TPE1": "Artist",
+        "TPE2": "Album Artist",
+        "TALB": "Album",
+        "TCON": "Genre",
+        "TRCK": "Track",
+        "TDRC": "Year",
+        "COMM": "Comment",
+        "POPM": "Rating",
+        "APIC": "Image"}
+
+    # file selection
+
     async def select_file():
         file = await ft.FilePicker().pick_files(
             dialog_title="Select MP3 file",
             file_type=ft.FilePickerFileType.CUSTOM,
             allowed_extensions=["mp3"])
         if file:
-            manage_file(file[0].path)
+            file_text.value = os.path.basename(file[0].path)
+            file_text.color = ft.Colors.WHITE
+            read_metadata(file[0].path)
 
     def on_drop(event: ftd.DropzoneEvent):
         files_dropped = event.files
@@ -28,15 +47,25 @@ def main(page: ft.Page):
         if file.lower().endswith(".mp3"):
             file_text.value = os.path.basename(file)
             file_text.color = ft.Colors.WHITE
+            read_metadata(file)
         else:
             file_text.value = "Only mp3 files are allowed"
             file_text.color = ft.Colors.RED
 
         file_text.update()
 
-    def manage_file(path: str):
-        file_text.value = os.path.basename(path)
-        file_text.color = ft.Colors.WHITE
+    # metadata
+
+    def read_metadata(path):
+        data_column.controls.clear()
+        audio = MP3(path, ID3=ID3)
+
+        for key, value in audio.tags.items():
+            label = metadata.get(key[:4], key)
+            data_column.controls.append(
+                ft.TextField(label=label, value=str(value)))
+
+    # controls
 
     file_text = ft.Text(
         "No files selected",
@@ -47,9 +76,11 @@ def main(page: ft.Page):
         icon=ft.Icons.INSERT_DRIVE_FILE_OUTLINED,
         on_click=select_file)
 
+    metadata_cointainer = ft.Container(
+        data_column:=ft.Column())
+
     main_container = ft.Container(
-        ft.Column(
-            [file_text, select_button]))
+        ft.Column([file_text, select_button, metadata_cointainer]))
 
     dropzone = ftd.Dropzone(
         expand=True,
