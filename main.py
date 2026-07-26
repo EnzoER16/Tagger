@@ -72,8 +72,9 @@ def main(page: ft.Page):
     # controls
 
     file_text = ft.Text(
-        "No files selected",
-        color=ft.Colors.GREY_500)
+        "No file selected",
+        color=ft.Colors.GREY_500,
+        expand=True)
 
     select_button = ft.Button(
         "Select file",
@@ -85,11 +86,16 @@ def main(page: ft.Page):
         icon=ft.Icons.SAVE,
         disabled=True)
 
+    buttons_row = ft.Container(
+        content=ft.Row(
+            controls=[
+                file_text, select_button, save_button]))
+
     metadata_container = ft.Container(
         data_column:=ft.Column())
 
     main_container = ft.Container(
-        ft.Column([file_text, select_button, metadata_container, save_button]))
+        ft.Column([buttons_row, metadata_container]))
 
     dropzone = ftd.Dropzone(
         expand=True,
