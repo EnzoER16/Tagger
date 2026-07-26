@@ -64,8 +64,16 @@ def main(page: ft.Page):
 
         for key, value in audio.tags.items():
             label = metadata.get(key[:4], key)
-            data_column.controls.append(
-                ft.TextField(label=label, value=str(value)))
+
+            if key.startswith("APIC"):
+                cover = ft.Image(
+                    src=value.data,
+                    width=200,
+                    height=200)
+                data_column.controls.append(cover)
+            else:
+                data_column.controls.append(
+                    ft.TextField(label=label, value=str(value)))
 
         save_button.disabled = False
 
