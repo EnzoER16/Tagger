@@ -6,6 +6,8 @@ def main(page: ft.Page):
     page.title = "Tagger"  
     page.window.width = 750
     page.window.height = 500
+    page.window.resizable = False
+    page.window.maximizable = False
     page.padding = 15
 
     metadata = {
@@ -65,6 +67,8 @@ def main(page: ft.Page):
             data_column.controls.append(
                 ft.TextField(label=label, value=str(value)))
 
+        save_button.disabled = False
+
     # controls
 
     file_text = ft.Text(
@@ -76,11 +80,16 @@ def main(page: ft.Page):
         icon=ft.Icons.INSERT_DRIVE_FILE_OUTLINED,
         on_click=select_file)
 
-    metadata_cointainer = ft.Container(
+    save_button = ft.Button(
+        "Save changes",
+        icon=ft.Icons.SAVE,
+        disabled=True)
+
+    metadata_container = ft.Container(
         data_column:=ft.Column())
 
     main_container = ft.Container(
-        ft.Column([file_text, select_button, metadata_cointainer]))
+        ft.Column([file_text, select_button, metadata_container, save_button]))
 
     dropzone = ftd.Dropzone(
         expand=True,
