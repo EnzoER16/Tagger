@@ -79,25 +79,21 @@ def main(page: ft.Page):
 
     # controls
 
-    file_text = ft.Text(
-        "No file selected",
-        color=ft.Colors.GREY_500,
-        expand=True)
-
-    select_button = ft.Button(
-        "Select file",
-        icon=ft.Icons.INSERT_DRIVE_FILE_OUTLINED,
-        on_click=select_file)
-
-    save_button = ft.Button(
-        "Save changes",
-        icon=ft.Icons.SAVE,
-        disabled=True)
-
-    buttons_row = ft.Container(
+    buttons_row = ft.Container(bgcolor=ft.Colors.GREEN,
         content=ft.Row(
             controls=[
-                file_text, select_button, save_button]))
+                file_text:=ft.Text(
+                    "No file selected",
+                    color=ft.Colors.GREY_500,
+                    expand=True),
+                select_button:=ft.Button(
+                    "Select file",
+                    icon=ft.Icons.INSERT_DRIVE_FILE_OUTLINED,
+                    on_click=select_file),
+                save_button:=ft.Button(
+                    "Save changes",
+                    icon=ft.Icons.SAVE,
+                    disabled=True)]))
 
     metadata_container = ft.Container(
         data_column:=ft.Column())
