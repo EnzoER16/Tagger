@@ -56,6 +56,23 @@ def main(page: ft.Page):
 
         file_text.update()
 
+    # file info
+
+    def file_info(path):
+
+        def convert_length(value):
+            minutes, seconds = divmod(int(value), 60)
+            return f"{minutes}:{seconds}"
+
+        audio = MP3(path)
+
+        length = f"{convert_length(audio.info.length)} min"
+        bitrate = f"{audio.info.bitrate/1000:.0f} kbps"
+        sample_rate = f"{audio.info.sample_rate} Hz"
+        channels = f"{audio.info.channels}"
+
+        return length, bitrate, sample_rate, channels
+
     # metadata
 
     def read_metadata(path):
